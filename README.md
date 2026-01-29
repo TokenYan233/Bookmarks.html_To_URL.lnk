@@ -1,23 +1,21 @@
-# 📑 备份的浏览器书签 拆分成LNK文件小工具 - Bookmarks.html To URL.lnk
+# 📑 备份浏览器书签拆分成 LNK 文件小工具 <br> <sub>Bookmarks.html To URL.lnk</sub>
 
 <p align="center">
-  <a href="https://github.com/TokenYan233/Bookmarks.html_To_URL.lnk/releases">
-    <img src="https://img.shields.io/github/v/release/TokenYan233/Bookmarks.html_To_URL.lnk?color=orange&logo=github" alt="Release">
-  </a>
-  <a href="https://opensource.org/licenses/MIT">
-    <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License">
-  </a>
-  <img src="https://img.shields.io/badge/Language-aardio-red.svg" alt="Language">
-  <img src="https://img.shields.io/badge/Platform-Windows-0078d7.svg?logo=windows" alt="Platform">
+  <a href="https://github.com/TokenYan233/Bookmarks.html_To_URL.lnk/releases"><img src="https://img.shields.io/github/v/release/TokenYan233/Bookmarks.html_To_URL.lnk?color=orange&logo=github" alt="Release"></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License"></a>
+  <a><img src="https://img.shields.io/badge/Language-aardio-red.svg" alt="Language"></a>
+  <a><img src="https://img.shields.io/badge/Platform-Windows-0078d7.svg?logo=windows" alt="Platform"></a>
 </p>
 
 ---
 
 ### 🌟 项目简介
 
-**备份的浏览器书签 拆分成LNK文件小工具 - Bookmarks.html To URL.lnk** 基于 [aardio](https://www.aardio.com) 开发，专注解决浏览器书签杂乱无章、层级复杂难以整理的问题。
+**备份的浏览器书签 拆分成LNK文件小工具 - Bookmarks.html To URL.lnk** 使用 [aardio](https://www.aardio.com) 工具开发，专注解决浏览器书签杂乱无章、层级复杂难以整理的问题。
 
-> **支持在“本地lnk链接文件”与“HTML书签文件”之间自由转换。**
+> **支持在“本地零碎url链接文件”与“HTML备份书签文件”之间自由转换。**
+
+*这样就可以很方便的像正常整理文件一样，整理你的拆分开书签文件。随意归档文件夹，放在你满意的文件夹名字内。最后再合并成一个完整的书签备份，导入回你的浏览器。大功告成！*
 
 ---
 
@@ -35,4 +33,5 @@
 </p>
 
 ---
-<a href="https://www.yan-me.top/20260129/">访问作者博客</a>
+### <a href="https://www.yan-me.top/20260129/">🌐 作者博客</a>
+* **🎰 注意**：使用前请阅读软件界面提示内容，做好备份与测试。注意书签数据安全。
