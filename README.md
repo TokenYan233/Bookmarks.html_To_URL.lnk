@@ -1,6 +1,6 @@
 <div align="center">
 
-# 📑 备份的浏览器书签 拆分成LNK文件小工具
+# 📑 备份的浏览器书签 拆分成URL文件小工具
 ***Bookmarks.html To URL.lnk***
 
 </div>
