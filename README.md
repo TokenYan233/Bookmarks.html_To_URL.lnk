@@ -1,4 +1,9 @@
-# 📑 备份浏览器书签拆分成 LNK 文件小工具 <br> <sub>Bookmarks.html To URL.lnk</sub>
+<div align="center">
+
+# 📑 备份的浏览器书签 拆分成LNK文件小工具
+***Bookmarks.html To URL.lnk***
+
+</div>
 
 <p align="center">
   <a href="https://github.com/TokenYan233/Bookmarks.html_To_URL.lnk/releases"><img src="https://img.shields.io/github/v/release/TokenYan233/Bookmarks.html_To_URL.lnk?color=orange&logo=github" alt="Release"></a>
