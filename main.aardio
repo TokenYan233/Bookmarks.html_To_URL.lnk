@@ -1,0 +1,243 @@
+//RUNAS//
+import win.ui;
+import fsys;
+import fsys.dlg;
+import io;
+import win.version;
+/*DSG{{*/
+mainForm = win.form(text="备份的书签 拆分成URL文件 — Bookmarks.html To URL.lnk";right=659;bottom=499;bgcolor=0xFFFFFF;border="thin")
+mainForm.add(
+btnExport={cls="button";text="执行拆解";left=120;top=185;right=300;bottom=225;bgcolor=0xC0DCC0;font=LOGFONT(h=-14;name='微软雅黑 Light';weight=290);z=5};
+btnMerge={cls="button";text="合并新HTML";left=395;top=185;right=575;bottom=225;bgcolor=0xF0CAA6;font=LOGFONT(h=-14;name='微软雅黑 Light';weight=290);z=13};
+btnSelectHtml={cls="button";text="选择";left=585;top=75;right=635;bottom=100;z=4};
+btnSelectSave={cls="button";text="选择";left=585;top=112;right=635;bottom=137;z=6};
+btnSelectTarget={cls="button";text="选择";left=585;top=149;right=635;bottom=174;z=12};
+editHtml={cls="edit";left=120;top=75;right=575;bottom=100;edge=1;z=3};
+editLog={cls="edit";left=15;top=245;right=655;bottom=480;edge=1;hscroll=1;multiline=1;vscroll=1;z=7};
+groupbox={cls="groupbox";text="在这儿，选择你的待拆解Bookmarks.html文件";left=15;top=45;right=655;bottom=255;clipch=1;edge=1;font=LOGFONT(h=-14;name='微软雅黑 Light';weight=290);transparent=1;z=16};
+line={cls="static";left=5;top=476;right=663;bottom=477;bgcolor=0xC0C0C0;z=14};
+lnkWebsite={cls="syslink";text="项目主页";left=600;top=480;right=655;bottom=495;align="center";center=1;font=LOGFONT(name='微软雅黑');transparent=1;z=2};
+static={cls="static";text="原始文件:";left=30;top=75;right=110;bottom=100;ah=1;align="center";aw=1;center=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=1};
+static1={cls="static";text="备份的书签 拆分成URL文件 — Bookmarks.html To URL.lnk";left=20;top=13;right=458;bottom=33;center=1;font=LOGFONT(h=-14;name='微软雅黑';weight=700);transparent=1;z=17};
+staticDir={cls="static";text="导出目录:";left=30;top=114;right=110;bottom=139;align="center";center=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=8};
+staticFile={cls="static";text="合并目标:";left=30;top=151;right=110;bottom=176;align="center";center=1;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=11};
+statusInfo={cls="static";text="Powered by 在自由而蔚蓝的天空下 | Yan-ME.ToP";left=15;top=480;right=380;bottom=495;center=1;color=0x808080;transparent=1;z=15};
+txtDirName={cls="static";text="未选择目录（默认为选择的书签备份.html同目录）";left=120;top=114;right=575;bottom=134;center=1;color=0xFF0000;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=9};
+txtFileName={cls="static";text="未选择文件名（默认为选择的html文件名加_New）";left=120;top=151;right=575;bottom=171;center=1;color=0x000080;font=LOGFONT(h=-14;name='微软雅黑');transparent=1;z=10}
+)
+/*}}*/
+
+import win.ui.simpleWindow;
+win.ui.simpleWindow(mainForm);
+import win.region.round;
+win.region.round(mainForm);
+
+// 全局变量：存储路径数据
+var globalData = {
+    rawPath = "";
+    saveDir = "";
+    newHtml = "";
+}
+
+// 界面显示：定时刷新底部状态行
+var sysVer = win.version.format();
+
+mainForm.setInterval( 
+    function(){
+        var timeStr = time().format("%Y-%m-%d %H:%M:%S");
+        mainForm.statusInfo.text = string.format("%s | %s", timeStr, sysVer);
+    },1000 
+);
+
+// 事件：点击底部主页链接
+mainForm.lnkWebsite.link =  "https://www.yan-me.top/20260129/";//快速设置或修改超链接
+mainForm.editLog.print(" ");
+mainForm.editLog.print("--- [说明] 将杂乱的书签导出为Bookmarks.html书签备份，然后拆解成一个个URL文件 ---");
+mainForm.editLog.print("---  拆URL链接文件方便作为文件整理。最后合并回Bookmarks.html书签备份，导入 ---");
+mainForm.editLog.print("---  拆分合并功能 均支持多文件夹层级（但无法保留书签时间和图标信息）注意 ---");
+mainForm.editLog.print(" ");
+mainForm.editLog.print("--- [提醒] Mozilla Firefox以及衍生浏览器书签导入不会按原样，如书签工具栏 ---");
+mainForm.editLog.print("---  测试Google Chrome以及衍生浏览器，书签导入回去是原样出现在工具栏 ---");
+mainForm.editLog.print(" ");
+mainForm.editLog.print("--- [再提醒] 书签收集非常珍贵。小心测试确认后，再导入回去。也留好原始档 ---");
+
+// 界面显示：提取路径末端名称
+var getTailName = function(path, isFile){
+    if(!#path) return "未选择";
+    var info = io.splitpath(path);
+    return isFile ? (info.name + info.ext) : info.file;
+}
+
+// 界面显示：刷新红蓝标识
+var refreshDisplay = function(){
+    mainForm.txtDirName.text = getTailName(globalData.saveDir, false);
+    mainForm.txtFileName.text = getTailName(globalData.newHtml, true);
+}
+
+// 路径初始化：选择文件后的路径联动
+var updatePaths = function(path){
+    if(!#path) return;
+    globalData.rawPath = path;
+    mainForm.editHtml.text = path;
+    var pathInfo = io.splitpath(path);
+    globalData.saveDir = fsys.joinpath(pathInfo.dir, pathInfo.name + "_Extracted");
+    globalData.newHtml = fsys.joinpath(pathInfo.dir, pathInfo.name + "_new.html");
+    refreshDisplay();
+}
+
+// 字符串处理：移除非法字符
+var toSafeName = function(name){
+    if(!name) return "未命名";
+    var reserved = {'\\';'/';':';'*';'?';'"';'<';'>';'|'};
+    var s = name;
+    for(i=1;#reserved;1) s = string.replace(s, "@" + reserved[i], "_");
+    s = string.replace(s, "[\r\n\t]", ""); 
+    return string.trim(s); 
+}
+
+// 事件：选择原始HTML
+mainForm.btnSelectHtml.oncommand = function(id,event){
+    var path = fsys.dlg.open("HTML书签|*.html",,,mainForm);
+    if(path) updatePaths(path);
+}
+
+// 事件：自定义拆解目录
+mainForm.btnSelectSave.oncommand = function(id,event){
+    var path = fsys.dlg.opendir(,mainForm,"选择拆解文件夹存放位置");
+    if(path){
+        globalData.saveDir = path;
+        refreshDisplay();
+    }
+}
+
+// 事件：自定义合并目标
+mainForm.btnSelectTarget.oncommand = function(id,event){
+    var path = fsys.dlg.save("HTML书签|*.html",,,mainForm);
+    if(path){
+        globalData.newHtml = path;
+        refreshDisplay();
+    }
+}
+
+// 功能：执行书签拆解任务
+mainForm.btnExport.oncommand = function(id,event){
+    if(!#globalData.rawPath) return;
+    var rawData = string.load(globalData.rawPath);
+    if(!#rawData) return;
+    
+    mainForm.editLog.text = "--- [任务] 启动拆解程序 ---" + '\r\n';
+    var clean = rawData;
+    while(true){
+        var s = string.indexOf(clean, 'ICON="');
+        if(!s) break;
+        var e = string.indexOf(clean, '"', s + 6);
+        if(!e) break;
+        clean = string.slice(clean, 1, s - 1) + string.slice(clean, e + 1);
+    }
+    clean = string.replace(clean, "@" + '\r', "");
+    clean = string.replace(clean, "@" + '\n', "");
+    
+    var dirStack = { globalData.saveDir }; 
+    var pos = 1;
+
+    while(true){
+        var i3 = string.indexOf(clean, "</H3>", pos);
+        var ia = string.indexOf(clean, "</A>", pos);
+        var idl = string.indexOf(clean, "</DL>", pos);
+        var targets = {};
+        if(i3) table.push(targets, {p:i3, t:"H3"});
+        if(ia) table.push(targets, {p:ia, t:"A"});
+        if(idl) table.push(targets, {p:idl, t:"DL"});
+        table.sort(targets, function(b){ return owner.p < b.p });
+        
+        if(!#targets) break;
+        var cur = targets[1];
+        
+        if(cur.t == "H3"){
+            var start = string.lastIndexOf(clean, ">", cur.p - 1);
+            if(start){
+                var name = toSafeName(string.slice(clean, start + 1, cur.p - 1));
+                var path = fsys.joinpath(dirStack[#dirStack], name);
+                fsys.createDir(path);
+                table.push(dirStack, path);
+                mainForm.editLog.print("[目录] " + name);
+            }
+        }
+        elseif(cur.t == "A"){
+            var start = string.lastIndexOf(clean, ">", cur.p - 1);
+            if(start){
+                var name = toSafeName(string.slice(clean, start + 1, cur.p - 1));
+                var hStart = string.lastIndexOf(clean, 'HREF="', cur.p);
+                var href = "";
+                if(hStart){
+                    var hEnd = string.indexOf(clean, '"', hStart + 6);
+                    if(hEnd) {
+                        href = string.slice(clean, hStart + 6, hEnd - 1);
+                        href = string.replace(href, "[\r\n\t\s]", ""); 
+                    }
+                }
+                var filePath = fsys.joinpath(dirStack[#dirStack], name + ".url");
+                string.save(filePath, "[InternetShortcut]" + '\r\n' + "URL=" + href);
+                mainForm.editLog.print("[书签] " + name);
+            }
+        }
+        elseif(cur.t == "DL"){
+            if(#dirStack > 1) table.pop(dirStack); 
+        }
+        pos = cur.p + 5;
+    }
+    mainForm.editLog.print("--- [完成] 拆解任务结束 ---");
+    mainForm.editLog.print(" ");
+    mainForm.editLog.print("--- [提醒] 书签收集非常珍贵。小心测试确认后，再导入回去。也留好原始档 ---");
+}
+
+// 功能：执行书签合并任务
+mainForm.btnMerge.oncommand = function(id,event){
+    if(!#globalData.rawPath || !fsys.isDir(globalData.saveDir)) return;
+    var rawData = string.load(globalData.rawPath);
+
+    mainForm.editLog.text = "--- [任务] 启动 HTML 重建程序 ---" + '\r\n';
+    var headEnd = string.indexOf(rawData, "</H1>");
+    var originalHead = headEnd ? string.slice(rawData, 1, headEnd + 4) : "<H1>Bookmarks</H1>";
+
+    var htmlContent = { originalHead; ""; "<DL><p>" };
+    var level = 0; 
+    var scanDirectory;
+    scanDirectory = function(path) {
+        level++;
+        var indent = string.repeat(level * 2, " "); 
+        fsys.enum(path, "*.*",
+            function(dir, filename, fullpath, fsysDir){ 
+                if(filename){ 
+                    if(string.endWith(string.lower(filename), ".url")){
+                        var content = string.load(fullpath);
+                        var url = string.match(content, "URL\s*=\s*([^\r\n]+)");
+                        if(url){
+                            var title = string.slice(filename, 1, -5); 
+                            table.push(htmlContent, '    <DT><A HREF="' + url + '">' + title + '</A>');
+                            mainForm.editLog.print(indent + "- 书签: " + title);
+                        }
+                    }
+                }
+                else{
+                    mainForm.editLog.print(indent + "+ 目录: " + dir);
+                    table.push(htmlContent, '    <DT><H3>' + dir + '</H3>', '    <DL><p>');
+                    scanDirectory(fullpath); 
+                    table.push(htmlContent, '    </DL><p>');
+                }
+            },
+            false 
+        );
+        level--;
+    }
+
+    scanDirectory(globalData.saveDir);
+    table.push(htmlContent, "</DL><p>");
+    string.save(globalData.newHtml, string.join(htmlContent, '\r\n'));
+    mainForm.editLog.print("--- [完成] HTML 重新合并成功 ---");
+    mainForm.editLog.print(" ");
+    mainForm.editLog.print("--- [提醒] 书签收集非常珍贵。小心测试确认后，再导入回去。也留好原始档 ---");
+}
+
+mainForm.show();
+win.loopMessage();

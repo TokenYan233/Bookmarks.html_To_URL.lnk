@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project ver="10" name="Bookmarks.html_To_URL.lnk" libEmbed="true" icon="\Project1.ico" ui="win" output="Bookmarks.html_To_URL.lnk.exe" CompanyName="https://www.yan-me.top/20260129/" FileDescription="备份的书签 拆分成URL文件 — Bookmarks.html To URL.lnk" LegalCopyright="Copyright (C) 哔哩哔哩_我永远喜欢兔兔子 2026" ProductName="备份的书签 拆分成URL文件 — Bookmarks.html To URL.lnk" InternalName="备份的书签 拆分成URL文件 — Bookmarks.html To URL.lnk" FileVersion="1.0.0.0" ProductVersion="1.0.0.0" publishDir="/dist/" dstrip="true" local="false" ignored="false">
+	<file name="main.aardio" path="main.aardio" comment="main.aardio"/>
+	<folder name="资源文件" path="res" embed="true" local="false" ignored="false"/>
+	<folder name="窗体文件" path="dlg" comment="目录" embed="true" local="false" ignored="false"/>
+</project>
