@@ -2,6 +2,7 @@
 
 # 📑 备份的浏览器书签 拆分成URL文件小工具
 ***Bookmarks.html To URL.lnk***
+[项目主页](https://www.yan-me.top/20260129/)
 
 </div>
 
@@ -14,4 +15,9 @@
 
 ---
 
+将浏览器书签导出备份bookmarks.html文件，拆成散开url文件。方便整理
+
+将拆分成的url文件夹合并为bookmarks.html书签备份。方便导入回浏览器
+
 <img width="857" height="694" alt="Bookmarks html_To_URL lnk" src="https://github.com/user-attachments/assets/9812c21d-ca08-4e62-8498-89bdb19751fa" />
+
